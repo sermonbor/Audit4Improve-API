@@ -1,0 +1,30 @@
+name: Bot de sermonbor
+
+on:
+  workflow_dispatch:
+  issues:
+    types: [opened]
+  project_card:
+    types: [moved]
+
+jobs:
+  tareas_del_bot:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Registrar el evento que despertó al bot
+        run: echo "¡Alarma! El bot se ha despertado gracias al evento '${{ github.event_name }}'"
+
+
+      - name: Escribir comentario automático
+       
+        if: github.event_name == 'issues'
+        uses: peter-evans/create-or-update-comment@v5
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            ¡Hola, ${{ github.actor }}! 👋
+            El sistema automático ha detectado actividad.
+            Atentamente, el bot de sermonbor.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
